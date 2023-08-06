@@ -35,16 +35,6 @@ namespace makerobo {
     const STP_CHD_L = 3071
     const STP_CHD_H = 1023
 
-    // HT16K33 commands
-    const HT16K33_ADDRESS = 0x70
-    const HT16K33_BLINK_CMD = 0x80
-    const HT16K33_BLINK_DISPLAYON = 0x01
-    const HT16K33_BLINK_OFF = 0
-    const HT16K33_BLINK_2HZ = 1
-    const HT16K33_BLINK_1HZ = 2
-    const HT16K33_BLINK_HALFHZ = 3
-    const HT16K33_CMD_BRIGHTNESS = 0xE0
-
     export enum Servos {
         S1 = 0x01,
         S2 = 0x02,
@@ -82,22 +72,8 @@ namespace makerobo {
         T5B0 = 1800
     }
     
-     export enum enObstacle {
-        //% blockId="Obstacle" block="有障碍物"
-        Obstacle = 0,
-        //% blockId="NoObstacle" block="无障碍物"
-        NoObstacle = 1
-    }
-
-     export enum enflame {
-        //% blockId="Flame" block="发现火焰"
-        Flame = 0,
-        //% blockId="NoFlame" block="无火焰"
-        NoFlame = 1
-    }
     let initialized = false
     let initializedMatrix = false
-    let neoStrip: neopixel.Strip;
     let matBuf = pins.createBuffer(17);
     let distanceBuf = 0;
 
@@ -195,30 +171,7 @@ namespace makerobo {
         setPwm((index - 1) * 2 + 1, 0, 0);
     }
 
-    function matrixInit() {
-        i2ccmd(HT16K33_ADDRESS, 0x21);// turn on oscillator
-        i2ccmd(HT16K33_ADDRESS, HT16K33_BLINK_CMD | HT16K33_BLINK_DISPLAYON | (0 << 1));
-        i2ccmd(HT16K33_ADDRESS, HT16K33_CMD_BRIGHTNESS | 0xF);
-    }
-
-    function matrixShow() {
-        matBuf[0] = 0x00;
-        pins.i2cWriteBuffer(HT16K33_ADDRESS, matBuf);
-    }
-
-
-    /**
-     * Init RGB pixels mounted on robotbit
-     */
-    //% blockId="robotbit_rgb" block="RGB"
-    //% weight=5
-    export function rgb(): neopixel.Strip {
-        if (!neoStrip) {
-            neoStrip = neopixel.create(DigitalPin.P16, 4, NeoPixelMode.RGB)
-        }
-
-        return neoStrip;
-    }
+    //4个RGB灯，接在 DigitalPin.P16 引脚
 
     /**
      * Servo Execute
@@ -339,34 +292,5 @@ namespace makerobo {
         }
     }
     
-    //% blockId=Microbit_Sensor_Sound block="声音传感器|管脚 %pin"
-    //% weight=99
-    //% blockGap=20
-    //% color="#228B22"
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=5
-    export function Sound(pin: AnalogPin): number {
-        let value: number;
-        value = pins.analogReadPin(pin);
-        return value;
-    }
-    
-    //% blockId=Microbit_Sensor_IR block="红外避障传感器|引脚 %pin|值 %value"
-    //% weight=96
-    //% blockGap=20
-    //% color="#228B22"
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=5
-    export function IR(pin: DigitalPin, value: enObstacle): boolean {
-        pins.setPull(pin, PinPullMode.PullUp);
-        return pins.digitalReadPin(pin) == value;
-    }
-
-    //% blockId=Microbit_Sensor_flame block="火焰传感器|引脚 %pin|值 %value"
-    //% weight=97
-    //% blockGap=20
-    //% color="#228B22"
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=5
-    export function flame(pin: DigitalPin, value: enflame): boolean {
-        pins.setPull(pin, PinPullMode.PullUp);
-        return pins.digitalReadPin(pin) == value;
-    }    
+      
 }
