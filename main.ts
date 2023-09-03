@@ -308,9 +308,11 @@ namespace makerobo {
         //% blockId="P0P1" block="P0P1"
         AP0P1 = 1,
         //% blockId="P2P3" block="P2P3"
-        AP2P12 = 2,
+        AP2P3 = 2,
         //% blockId="P3P4" block="P3P4"
-        AP3P4 = 3
+        AP3P4 = 3,
+        //% blockId="P2P12" block="P2P12"
+        AP2P12 = 4 //这个是假的，但是P12也要接线，这样才能保证只有左右有效。否则就一直是右
     }
     //% blockId=ModuleWorld_Anaglog_Rocker block="摇杆|引脚 %value_ANum|返回 %value"
     //% weight=1
@@ -323,6 +325,7 @@ namespace makerobo {
         if (value_ANum == 1) { pin1 = AnalogPin.P0; pin2 = AnalogPin.P1; }
         else if (value_ANum == 2) { pin1 = AnalogPin.P2; pin2 = AnalogPin.P3; }
         else if (value_ANum == 3) { pin1 = AnalogPin.P3; pin2 = AnalogPin.P4; }
+        else if (value_ANum == 4) { pin1 = AnalogPin.P2; pin2 = AnalogPin.P12; }
 
         let x = pins.analogReadPin(pin1);
         let y = pins.analogReadPin(pin2);
