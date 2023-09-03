@@ -336,7 +336,7 @@ namespace makerobo {
         {
             now_state = enRocker.Left;
         }
-        else if (x > 500) //右
+        else if (x > 550) //右
         {
             now_state = enRocker.Right;
         }
