@@ -292,5 +292,62 @@ namespace makerobo {
         }
     }
     
-      
+    export enum enRocker {
+        //% blockId="NoState" block="无"
+        NoState = 0,
+        //% blockId="Up" block="上"
+        Up,
+        //% blockId="Down" block="下"
+        Down,
+        //% blockId="Left" block="左"
+        Left,
+        //% blockId="Right" block="右"
+        Right
+    }
+    export enum mwAnalogNum {
+        //% blockId="P0P1" block="P0P1"
+        AP0P1 = 1,
+        //% blockId="P2P12" block="P2P12"
+        AP2P12 = 2,
+        //% blockId="P3P4" block="P3P4"
+        AP3P4 = 3
+    }
+    //% blockId=ModuleWorld_Anaglog_Rocker block="摇杆|引脚 %value_ANum|返回 %value"
+    //% weight=1
+    //% blockGap=20
+    export function Rocker(value_ANum: mwAnalogNum, value: enRocker): boolean {
+
+        let pin1;
+        let pin2;
+
+        if (value_ANum == 1) { pin1 = AnalogPin.P0; pin2 = AnalogPin.P1; }
+        else if (value_ANum == 2) { pin1 = AnalogPin.P2; pin2 = AnalogPin.P12; }
+        else if (value_ANum == 3) { pin1 = AnalogPin.P3; pin2 = AnalogPin.P4; }
+
+        let x = pins.analogReadPin(pin1);
+        let y = pins.analogReadPin(pin2);
+
+        let now_state = enRocker.NoState;
+
+        if (x < 100) // 左
+        {
+            now_state = enRocker.Left;
+        }
+        else if (x > 700) //右
+        {
+            now_state = enRocker.Right;
+        }
+        else  // 上下
+        {
+            if (y < 100) //下
+            {
+                now_state = enRocker.Down;
+            }
+            else if (y > 700) //上
+            {
+                now_state = enRocker.Up;
+            }
+        }
+        return now_state == value;
+    }
 }
